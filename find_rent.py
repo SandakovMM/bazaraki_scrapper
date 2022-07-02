@@ -51,7 +51,7 @@ def get_suggestions(already_known, drop_other_regions):
             elif drop_other_regions and item.name == 'h2' and item.string == "Ads from other regions":
                 # I don't want to see other regions
                 break
-    return suggestion
+    return suggestions
 
 
 if __name__ == "__main__":
