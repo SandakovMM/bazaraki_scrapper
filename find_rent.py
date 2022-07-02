@@ -1,13 +1,31 @@
 #!/bin/python3
+"""
+The script that can bew used to check long term rent suggestions.
+For now only Paphos on Cyprus from the bazaraki.com web-site.
+Usage:
+    find_rent.py [options]
+Options:
+    -h, --help           Display this message.
+    -a, --all-regions    Show suggestions for all regions.
+    -f, --known-file     choose the file that contains already checked suggestions. So we could not look for them twice.
+"""
 
+import sys
+import getopt
 import urllib.request
 from bs4 import BeautifulSoup
+
+USAGE_TEXT = __doc__
+
+
+def usage():
+    print(USAGE_TEXT)
 
 SITE_URL = "https://www.bazaraki.com"
 SITE_FILTER = "/real-estate/houses-and-villas-rent/number-of-bedrooms---2/number-of-bedrooms---3/number-of-bedrooms---4/pafos-district-paphos/?price_max=1500"
 
 
-def get_info(drop_other_regions=True):
+def get_info(already_known_file, drop_other_regions):
     req = urllib.request.Request(
         SITE_URL + SITE_FILTER, 
         data=None, 
@@ -29,4 +47,23 @@ def get_info(drop_other_regions=True):
 
 
 if __name__ == "__main__":
-    get_info()
+    drop_other_regiouns = True
+    already_known_filename = None
+
+    try:
+        options, args = getopt.getopt(sys.argv[1:], 'haf:',
+                                      ['help', 'all-region', 'known-file='])
+    except getopt.error, msg:
+        usage()
+        sys.exit(1)
+
+    for opt, val in options:
+        if opt in ('-h', '--help'):
+            usage()
+            sys.exit(0)
+        elif opt in ('-a', '--all-region'):
+            drop_other_regiouns = False
+        elif opt in ('-f', '--known-file'):
+            already_known_filename = val
+
+    get_info(already_known_filename, drop_other_regiouns)
