@@ -61,7 +61,7 @@ if __name__ == "__main__":
     try:
         options, args = getopt.getopt(sys.argv[1:], 'haf:',
                                       ['help', 'all-region', 'known-file='])
-    except getopt.error, msg:
+    except getopt.error:
         usage()
         sys.exit(1)
 
