@@ -29,9 +29,7 @@ def extract_already_known(filename):
         return knownfile.readlines()
 
 
-def get_suggestions(already_known_file, drop_other_regions):
-    already_known = extract_already_known(already_known_file)
-
+def get_suggestions(already_known, drop_other_regions):
     req = urllib.request.Request(
         SITE_URL + SITE_FILTER, 
         data=None, 
@@ -76,7 +74,8 @@ if __name__ == "__main__":
         elif opt in ('-f', '--known-file'):
             already_known_filename = val
 
-    suggestions = get_suggestions(already_known_filename, drop_other_regiouns)
+    suggestions = get_suggestions(extract_already_known(already_known_filename),
+                                  drop_other_regiouns)
 
     for suggestion in suggestions:
         print(suggestion)
