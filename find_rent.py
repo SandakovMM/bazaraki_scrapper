@@ -55,7 +55,7 @@ def get_suggestions(already_known, drop_other_regions):
 
 
 if __name__ == "__main__":
-    drop_other_regiouns = True
+    drop_other_regions = True
     already_known_filename = None
 
     try:
@@ -70,12 +70,12 @@ if __name__ == "__main__":
             usage()
             sys.exit(0)
         elif opt in ('-a', '--all-region'):
-            drop_other_regiouns = False
+            drop_other_regions = False
         elif opt in ('-f', '--known-file'):
             already_known_filename = val
 
     suggestions = get_suggestions(extract_already_known(already_known_filename),
-                                  drop_other_regiouns)
+                                  drop_other_regions)
 
     for suggestion in suggestions:
         print(suggestion)
