@@ -16,16 +16,22 @@ import urllib.request
 from bs4 import BeautifulSoup
 
 USAGE_TEXT = __doc__
+SITE_URL = "https://www.bazaraki.com"
+SITE_FILTER = "/real-estate/houses-and-villas-rent/number-of-bedrooms---2/number-of-bedrooms---3/number-of-bedrooms---4/pafos-district-paphos/?price_max=1500"
 
 
 def usage():
     print(USAGE_TEXT)
 
-SITE_URL = "https://www.bazaraki.com"
-SITE_FILTER = "/real-estate/houses-and-villas-rent/number-of-bedrooms---2/number-of-bedrooms---3/number-of-bedrooms---4/pafos-district-paphos/?price_max=1500"
+
+def extract_already_known(filename):
+    with open(filename, 'r') as knownfile:
+        return knownfile.readlines()
 
 
-def get_info(already_known_file, drop_other_regions):
+def get_suggestions(already_known_file, drop_other_regions):
+    already_known = extract_already_known(already_known_file)
+
     req = urllib.request.Request(
         SITE_URL + SITE_FILTER, 
         data=None, 
@@ -34,16 +40,20 @@ def get_info(already_known_file, drop_other_regions):
         }
     )
 
+    suggestions = []
+
     with urllib.request.urlopen(req) as url:
         soup = BeautifulSoup(url.read(), "html.parser")
 
         list = soup.find('ul', 'list-simple__output')
         for item in list.children:
             if item.name == 'li' and item.a is not None:
-                print(SITE_URL + item.a['href'])
+                if item.a['href'] not in already_known:
+                    suggestions.append(SITE_URL + item.a['href'])
             elif drop_other_regions and item.name == 'h2' and item.string == "Ads from other regions":
                 # I don't want to see other regions
                 break
+    return suggestion
 
 
 if __name__ == "__main__":
@@ -66,4 +76,7 @@ if __name__ == "__main__":
         elif opt in ('-f', '--known-file'):
             already_known_filename = val
 
-    get_info(already_known_filename, drop_other_regiouns)
+    suggestions = get_suggestions(already_known_filename, drop_other_regiouns)
+
+    for suggestion in suggestions:
+        print(suggestion)
