@@ -17,7 +17,7 @@ def get_info(drop_other_regions=True):
     )
 
     with urllib.request.urlopen(req) as url:
-        soup = BeautifulSoup(url.read())
+        soup = BeautifulSoup(url.read(), "html.parser")
 
         list = soup.find('ul', 'list-simple__output')
         for item in list.children:
