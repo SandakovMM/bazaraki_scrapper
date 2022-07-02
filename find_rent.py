@@ -16,5 +16,12 @@ req = urllib.request.Request(
 
 with urllib.request.urlopen(req) as url:
     soup = BeautifulSoup(url.read())
-    for item in soup.find_all('li', 'announcement-container'):
-        print(SITE_URL + item.a['href'])
+
+    list = soup.find('ul', 'list-simple__output')
+    for item in list.children:
+        if item.name == 'li' and item.a is not None:
+            print(SITE_URL + item.a['href'])
+        elif item.name == 'h2':
+            if item.string == "Ads from other regions":
+                # I don't want to see other regions
+                break
