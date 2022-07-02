@@ -56,7 +56,7 @@ def get_suggestions(already_known, drop_other_regions):
 
 if __name__ == "__main__":
     drop_other_regions = True
-    already_known_filename = None
+    already_known = []
 
     try:
         options, args = getopt.getopt(sys.argv[1:], 'haf:',
@@ -72,10 +72,9 @@ if __name__ == "__main__":
         elif opt in ('-a', '--all-region'):
             drop_other_regions = False
         elif opt in ('-f', '--known-file'):
-            already_known_filename = val
+            already_known = extract_already_known(val)
 
-    suggestions = get_suggestions(extract_already_known(already_known_filename),
-                                  drop_other_regions)
+    suggestions = get_suggestions(already_known, drop_other_regions)
 
     for suggestion in suggestions:
         print(suggestion)
