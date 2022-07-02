@@ -25,8 +25,12 @@ def usage():
 
 
 def extract_already_known(filename):
+    res = []
     with open(filename, 'r') as knownfile:
-        return knownfile.readlines()
+        for suggestion in knownfile.readlines():
+            res.append(suggestion.strip())
+
+    return res
 
 
 def get_suggestions(already_known, drop_other_regions):
