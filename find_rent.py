@@ -50,9 +50,7 @@ def get_suggestions(already_known, drop_other_regions):
         list = soup.find('ul', 'list-simple__output')
         for item in list.children:
             if item.name == 'li' and item.a is not None:
-                candidate = SITE_URL + item.a['href']
-                if candidate not in already_known:
-                    suggestions.append(candidate)
+                suggestions.append(SITE_URL + item.a['href'])
             elif drop_other_regions and item.name == 'h2' and item.string == "Ads from other regions":
                 # I don't want to see other regions
                 break
@@ -82,4 +80,9 @@ if __name__ == "__main__":
     suggestions = get_suggestions(already_known, drop_other_regions)
 
     for suggestion in suggestions:
-        print(suggestion)
+        if suggestion not in already_known:
+            print("+ " + suggestion)
+
+    for known in already_known:
+        if known not in suggestions:
+            print("- " + known)
