@@ -57,13 +57,47 @@ def get_suggestions(already_known, drop_other_regions):
     return suggestions
 
 
+def process_suggestions(suggestions, already_known, known_filename):
+    new_suggestion_actions = [
+        lambda suggestion: print("+ " + suggestion)
+    ]
+    expired_suggestions_actions = [
+        lambda suggestion: print("- " + suggestion)
+    ]
+    actual_known_suggestions_actions = [ ]
+
+    next_known_list = []
+    if change_known_file:
+        new_suggestion_actions.append(lambda suggestion: next_known_list.append(suggestion))
+        actual_known_suggestions_actions.append(lambda suggestion: next_known_list.append(suggestion))
+
+    for suggestion in suggestions:
+        if suggestion not in already_known:
+            for action in new_suggestion_actions:
+                action(suggestion)
+
+    for known in already_known:
+        if known not in suggestions:
+            for action in expired_suggestions_actions:
+                action(known)
+        else:
+            for action in actual_known_suggestions_actions:
+                action(known)
+
+    if change_known_file and known_filename is not None:
+        with open(known_filename, 'w') as known_file:
+            for known in next_known_list:
+                known_file.write(known + "\n")
+
 if __name__ == "__main__":
     drop_other_regions = True
+    change_known_file = False
+    known_filename = None
     already_known = []
 
     try:
-        options, args = getopt.getopt(sys.argv[1:], 'haf:',
-                                      ['help', 'all-region', 'known-file='])
+        options, args = getopt.getopt(sys.argv[1:], 'haif:',
+                                      ['help', 'all-region', 'in-place', 'known-file='])
     except getopt.error:
         usage()
         sys.exit(1)
@@ -74,15 +108,12 @@ if __name__ == "__main__":
             sys.exit(0)
         elif opt in ('-a', '--all-region'):
             drop_other_regions = False
+        elif opt in ('-i', '--in-place'):
+            change_known_file = True
         elif opt in ('-f', '--known-file'):
-            already_known = extract_already_known(val)
+            known_filename = val
+            already_known = extract_already_known(known_filename)
 
     suggestions = get_suggestions(already_known, drop_other_regions)
 
-    for suggestion in suggestions:
-        if suggestion not in already_known:
-            print("+ " + suggestion)
-
-    for known in already_known:
-        if known not in suggestions:
-            print("- " + known)
+    process_suggestions(suggestions, already_known, known_filename)
