@@ -57,7 +57,9 @@ def get_suggestions(already_known, drop_other_regions):
     return suggestions
 
 
-def process_suggestions(suggestions, already_known, known_filename):
+def process_suggestions(suggestions, known_filename):
+    already_known = extract_already_known(known_filename)
+
     new_suggestion_actions = [
         lambda suggestion: print("+ " + suggestion)
     ]
@@ -93,7 +95,6 @@ if __name__ == "__main__":
     drop_other_regions = True
     change_known_file = False
     known_filename = None
-    already_known = []
 
     try:
         options, args = getopt.getopt(sys.argv[1:], 'haif:',
@@ -112,8 +113,7 @@ if __name__ == "__main__":
             change_known_file = True
         elif opt in ('-f', '--known-file'):
             known_filename = val
-            already_known = extract_already_known(known_filename)
 
-    suggestions = get_suggestions(already_known, drop_other_regions)
+    suggestions = get_suggestions(drop_other_regions)
 
-    process_suggestions(suggestions, already_known, known_filename)
+    process_suggestions(suggestions, known_filename)
