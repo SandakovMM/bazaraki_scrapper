@@ -14,6 +14,7 @@ import sys
 import getopt
 import urllib.request
 from bs4 import BeautifulSoup
+from os.path import exists
 
 USAGE_TEXT = __doc__
 SITE_URL = "https://www.bazaraki.com"
@@ -27,6 +28,10 @@ def usage():
 
 def extract_already_known(filename):
     res = []
+
+    if not exists(filename):
+        return []
+
     with open(filename, 'r') as knownfile:
         for suggestion in knownfile.readlines():
             res.append(suggestion.strip())
