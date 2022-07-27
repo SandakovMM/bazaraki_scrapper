@@ -33,7 +33,7 @@ def extract_already_known(filename):
     return res
 
 
-def get_suggestions(already_known, drop_other_regions):
+def get_suggestions(drop_other_regions):
     req = urllib.request.Request(
         SITE_URL + SITE_FILTER, 
         data=None, 
