@@ -17,7 +17,8 @@ from bs4 import BeautifulSoup
 
 USAGE_TEXT = __doc__
 SITE_URL = "https://www.bazaraki.com"
-SITE_FILTER = "/real-estate/houses-and-villas-rent/number-of-bedrooms---2/number-of-bedrooms---3/number-of-bedrooms---4/pafos-district-paphos/?price_max=1500"
+SITE_RENT_HOUSES_FILTER = "/real-estate/houses-and-villas-rent/number-of-bedrooms---1/number-of-bedrooms---2/number-of-bedrooms---3/number-of-bedrooms---4/pafos-district-paphos/?price_max=1500"
+CAR_BUY_FILTER = "/car-motorbikes-boats-and-parts/cars-trucks-and-vans/gearbox---1/year_min---58/pafos-district-paphos/?price_max=3000"
 
 
 def usage():
@@ -35,8 +36,8 @@ def extract_already_known(filename):
 
 def get_suggestions(drop_other_regions):
     req = urllib.request.Request(
-        SITE_URL + SITE_FILTER, 
-        data=None, 
+        SITE_URL + CAR_BUY_FILTER,
+        data=None,
         headers={
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'
         }
