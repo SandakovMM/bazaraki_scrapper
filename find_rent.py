@@ -92,6 +92,7 @@ def process_suggestions(suggestions, known_filename):
             for known in next_known_list:
                 known_file.write(known + "\n")
 
+
 if __name__ == "__main__":
     drop_other_regions = True
     change_known_file = False
