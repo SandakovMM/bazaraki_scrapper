@@ -8,6 +8,9 @@ Options:
     -h, --help           Display this message.
     -a, --all-regions    Show suggestions for all regions.
     -f, --known-file     choose the file that contains already checked suggestions. So we could not look for them twice.
+    -i, --in-place       write new / remove old intormation right into known files
+    -g, --goal           choose one of available filters: rent_house, buy_car or buy_house
+
 """
 
 import sys
