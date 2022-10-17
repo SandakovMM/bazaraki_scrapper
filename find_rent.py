@@ -18,8 +18,12 @@ from os.path import exists
 
 USAGE_TEXT = __doc__
 SITE_URL = "https://www.bazaraki.com"
-SITE_RENT_HOUSES_FILTER = "/real-estate/houses-and-villas-rent/number-of-bedrooms---1/number-of-bedrooms---2/number-of-bedrooms---3/number-of-bedrooms---4/pafos-district-paphos/?price_max=1500"
-CAR_BUY_FILTER = "/car-motorbikes-boats-and-parts/cars-trucks-and-vans/gearbox---1/year_min---58/pafos-district-paphos/?price_max=3000"
+
+goalsFilters = {
+    "rent_house": "/real-estate/houses-and-villas-rent/number-of-bedrooms---1/number-of-bedrooms---2/number-of-bedrooms---3/number-of-bedrooms---4/pafos-district-paphos/?price_max=1500",
+    "buy_car": "/car-motorbikes-boats-and-parts/cars-trucks-and-vans/gearbox---1/year_min---58/pafos-district-paphos/?price_max=3000",
+    "buy_house": "/real-estate/houses-and-villas-sale/number-of-bedrooms---2/number-of-bedrooms---3/number-of-bedrooms---4/pafos-district-paphos/?price_max=150000",
+}
 
 
 def usage():
@@ -39,9 +43,9 @@ def extract_already_known(filename):
     return res
 
 
-def get_suggestions(drop_other_regions):
+def get_suggestions(drop_other_regions, goal):
     req = urllib.request.Request(
-        SITE_URL + CAR_BUY_FILTER,
+        SITE_URL + goalsFilters[goal],
         data=None,
         headers={
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'
@@ -102,10 +106,11 @@ if __name__ == "__main__":
     drop_other_regions = True
     change_known_file = False
     known_filename = None
+    goal = "rent_house"
 
     try:
-        options, args = getopt.getopt(sys.argv[1:], 'haif:',
-                                      ['help', 'all-region', 'in-place', 'known-file='])
+        options, args = getopt.getopt(sys.argv[1:], 'haif:g:',
+                                      ['help', 'all-region', 'in-place', 'known-file=', 'goal='])
     except getopt.error:
         usage()
         sys.exit(1)
@@ -120,7 +125,9 @@ if __name__ == "__main__":
             change_known_file = True
         elif opt in ('-f', '--known-file'):
             known_filename = val
+        elif opt in ('-g', '--goal'):
+            goal = val
 
-    suggestions = get_suggestions(drop_other_regions)
+    suggestions = get_suggestions(drop_other_regions, goal)
 
     process_suggestions(suggestions, known_filename)
